@@ -31,7 +31,7 @@ services:
   cotrip-frontend:
     image: "younesadem/cotrip-frontend:latest"
     environment:
-      - BACKEND_URL=http://cotrip-backend:8081
+      - VITE_BACKEND_URL=http://cotrip-backend:8081
     depends_on:
       cotrip-backend:
         condition: service_started
