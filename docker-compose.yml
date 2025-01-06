@@ -36,7 +36,7 @@ services:
       cotrip-backend:
         condition: service_started
     ports:
-      - "8080:5173"
+      - "80:5173"
 
 volumes:
   postgres_data:
