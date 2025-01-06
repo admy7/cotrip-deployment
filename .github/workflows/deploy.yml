@@ -51,11 +51,10 @@ jobs:
       - name: Set Environment Variables on EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
-            echo "export POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> ~/.bashrc
-            echo "export POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> ~/.bashrc
-            echo "export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> ~/.bashrc
-            source ~/.bashrc
-            echo "Environment variables set and persisted!"
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" > /home/ubuntu/cotrip-deployment/.env
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> /home/ubuntu/cotrip-deployment/.env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> /home/ubuntu/cotrip-deployment/.env
+          echo "Environment variables saved to .env file"
           EOF
 
       - name: Copy Docker Compose file to EC2
@@ -67,8 +66,10 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
             cd /home/ubuntu/cotrip-deployment
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            sudo docker-compose down  
-            sudo -E docker-compose up --pull always -d
+            sudo docker-compose down
+            sudo docker-compose rm -f
+            sudo docker-compose pull   
+            sudo docker-compose up -d
           EOF
 
       - name: Revoke SSH Access
