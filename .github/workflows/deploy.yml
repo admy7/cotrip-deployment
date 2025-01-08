@@ -50,8 +50,9 @@ jobs:
 
       - name: Set Environment Variables on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
-          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" > /home/ubuntu/cotrip-deployment/.env
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP_ADDRESS }} << EOF
+          echo "EC2_IP=${{ secrets.EC2_IP_ADDRESS }}" >> /home/ubuntu/cotrip-deployment/.env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> /home/ubuntu/cotrip-deployment/.env
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> /home/ubuntu/cotrip-deployment/.env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> /home/ubuntu/cotrip-deployment/.env
           echo "Environment variables saved to .env file"
